@@ -2,7 +2,14 @@
 
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { Github, Linkedin, Download, GraduationCap, MapPin, Loader2 } from "lucide-react";
+import {
+  Github,
+  Linkedin,
+  Download,
+  GraduationCap,
+  MapPin,
+  Loader2,
+} from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -33,18 +40,20 @@ export function AboutSection() {
     },
   };
 
-  const handleDownloadResume = async () => {
+  const handleDownloadResume = () => {
     setIsDownloading(true);
-    
+
+    const link = document.createElement("a");
+    link.href = "/Saurabh_Desai_Resume.pdf";
+    link.download = "Saurabh_Desai_Resume.pdf";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // Spinner visible briefly (UX purpose)
     setTimeout(() => {
-      const link = document.createElement('a');
-      link.href = '/Saurabh_Desai_Resume.pdf';
-      link.download = 'Saurabh_Desai_Resume.pdf';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
       setIsDownloading(false);
-    }, 500);
+    }, 800);
   };
 
   return (
@@ -88,7 +97,11 @@ export function AboutSection() {
               <motion.div
                 className="absolute -top-6 -right-6 glass p-4 rounded-2xl"
                 animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
               >
                 <GraduationCap className="w-6 h-6 text-cyan-400" />
               </motion.div>
@@ -96,7 +109,12 @@ export function AboutSection() {
               <motion.div
                 className="absolute -bottom-6 -left-6 glass p-4 rounded-2xl"
                 animate={{ y: [0, 10, 0] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 1.5,
+                }}
               >
                 <MapPin className="w-6 h-6 text-teal-400" />
               </motion.div>
@@ -143,7 +161,10 @@ export function AboutSection() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="glass-card px-6 py-3 rounded-full flex items-center gap-2 text-foreground hover:text-cyan-400 transition-colors"
-                whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(34, 211, 238, 0.3)" }}
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: "0 0 25px rgba(34, 211, 238, 0.3)",
+                }}
                 whileTap={{ scale: 0.95 }}
               >
                 <Github className="w-5 h-5" />
@@ -155,7 +176,10 @@ export function AboutSection() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="glass-card px-6 py-3 rounded-full flex items-center gap-2 text-foreground hover:text-cyan-400 transition-colors"
-                whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(34, 211, 238, 0.3)" }}
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: "0 0 25px rgba(34, 211, 238, 0.3)",
+                }}
                 whileTap={{ scale: 0.95 }}
               >
                 <Linkedin className="w-5 h-5" />
@@ -165,16 +189,25 @@ export function AboutSection() {
               <motion.button
                 onClick={handleDownloadResume}
                 disabled={isDownloading}
-                className="glass px-6 py-3 rounded-full flex items-center gap-2 border border-cyan-400/30 text-cyan-400 hover:bg-cyan-400/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(34, 211, 238, 0.3)" }}
+                className="glass px-6 py-3 rounded-full flex items-center gap-2 border border-cyan-400/30 text-cyan-400
+             hover:bg-cyan-400/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: "0 0 25px rgba(34, 211, 238, 0.3)",
+                }}
                 whileTap={{ scale: 0.95 }}
               >
                 {isDownloading ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Downloading...
+                  </>
                 ) : (
-                  <Download className="w-5 h-5" />
+                  <>
+                    <Download className="w-5 h-5" />
+                    Download Resume
+                  </>
                 )}
-                Download Resume
               </motion.button>
             </div>
           </motion.div>
