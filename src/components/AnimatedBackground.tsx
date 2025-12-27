@@ -1,57 +1,43 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import anime from "animejs";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
+import Particles from "@/components/ui/particles";
 
 export function AnimatedBackground() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const [colorComponents, setColorComponents] = useState<string[]>(["#ffffff"]);
 
   useEffect(() => {
-    if (!containerRef.current) return;
-
-    const particles: HTMLDivElement[] = [];
-    const particleCount = 30;
-
-    for (let i = 0; i < particleCount; i++) {
-      const particle = document.createElement("div");
-      particle.className = "absolute rounded-full";
-      const size = Math.random() * 4 + 1;
-      particle.style.width = `${size}px`;
-      particle.style.height = `${size}px`;
-      particle.style.background = `rgba(34, 211, 238, ${Math.random() * 0.3 + 0.1})`;
-      particle.style.left = `${Math.random() * 100}%`;
-      particle.style.top = `${Math.random() * 100}%`;
-      containerRef.current.appendChild(particle);
-      particles.push(particle);
-    }
-
-    anime({
-      targets: particles,
-      translateX: () => anime.random(-50, 50),
-      translateY: () => anime.random(-50, 50),
-      scale: () => [1, anime.random(1.5, 2), 1],
-      opacity: () => [
-        { value: anime.random(0.1, 0.3), duration: anime.random(2000, 3000) },
-        { value: 0.05, duration: anime.random(2000, 3000) }
-      ],
-      duration: () => anime.random(8000, 12000),
-      easing: "easeInOutQuad",
-      loop: true,
-      direction: "alternate",
-      delay: () => anime.random(0, 3000),
-    });
-
-    return () => {
-      particles.forEach((p) => p.remove());
-    };
+    setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (theme === "dark") {
+      // Bright white/cyan mix for dark mode
+      setColorComponents(["#ffffff", "#ffffff", "#A3D8F4"]);
+    } else {
+      // Professional Cool & Soft palette for light mode (Sky 400, Indigo 400, Teal 400)
+      setColorComponents(["#38bdf8", "#818cf8", "#2dd4bf"]);
+    }
+  }, [theme]);
+
+  if (!mounted) return null;
 
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-      <div
-        ref={containerRef}
+      <Particles
         className="absolute inset-0"
-        aria-hidden="true"
+        particleColors={colorComponents}
+        particleCount={200}
+        particleSpread={10}
+        speed={0.1}
+        particleBaseSize={100}
+        moveParticlesOnHover={true}
+        particleHoverFactor={1}
+        alphaParticles={false}
+        disableRotation={false}
       />
       <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-teal-500/5" />
       <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-cyan-400/5 rounded-full blur-[100px]" 
